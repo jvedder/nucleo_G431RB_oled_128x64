@@ -1,16 +1,16 @@
 /**
   ******************************************************************************
-  * @file    oled.h
+  * @file    font.h
   * @brief   This file contains all the function prototypes for
-  *          the oled.c file
+  *          the font.c file
   ******************************************************************************
   * @attention
   * Copyright (c) 2026 John Vedder
   * MIT License
   ******************************************************************************
   */
-#ifndef __OLED_H__
-#define __OLED_H__
+#ifndef __FONT_H__
+#define __FONT_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -19,18 +19,20 @@ extern "C" {
 /* Includes */
 #include "main.h"
 
-/* Private defines */
+
+/* Defines */
+#define FONT_CHAR_MIN 0
+#define FONT_CGHAR_MAX 255
+
+
+/* Declaraions */
+extern const uint8_t font[];
 
 
 /* Prototypes */
 
-void OLED_Init(void);
-void OLED_SendData(  uint8_t page_addr, uint8_t col_addr, const uint8_t *data, uint8_t length);
-void OLED_PutChar(uint8_t x, uint8_t y, uint8_t glyph);
-void OLED_Clear(void);
-void OLED_Fill(void);
 
 #ifdef __cplusplus
 }
 #endif
-#endif /*__ OLED_H__ */
+#endif /*__FONT_H__*/

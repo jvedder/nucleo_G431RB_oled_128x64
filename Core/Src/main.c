@@ -12,7 +12,7 @@
   * This software is licensed under terms that can be found in the LICENSE file
   * in the root directory of this software component.
   * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
+  * 
   ******************************************************************************
   */
 /* USER CODE END Header */
@@ -21,6 +21,7 @@
 #include "i2c.h"
 #include "usart.h"
 #include "gpio.h"
+#include "font.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -99,6 +100,13 @@ int main(void)
   printf("Build: " __DATE__ ", " __TIME__ "\r\n");
 
   OLED_Init();
+  OLED_Clear();
+  //OLED_SendData(0x00, 0x00);
+  //OLED_SendData(0x01, 0x00);
+  //OLED_SendData(0x02, 0x10);
+  //OLED_SendData(0x03, 0x18);
+  OLED_Fill();
+  //OLED_PutChar(0x00, 0x00, 'F');
 
   /* USER CODE END 2 */
 
