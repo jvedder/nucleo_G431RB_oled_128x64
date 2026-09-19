@@ -54,8 +54,12 @@
 
 // clang-format on
 
-static uint8_t i2c_buffer[64]; 
-
+/* maps 4 bits to 8 bits by doubling each bit */
+static const uint8_t double_bit[] = 
+{
+  0x00, 0x03, 0x0C, 0x0F, 0x30, 0x33, 0x3C, 0x3F, 
+  0xC0, 0xC3, 0xCC, 0xCF, 0xF0, 0xF3, 0xFC, 0xFF
+};
 
 /* Init sequence */
 // clang-format off
@@ -90,6 +94,13 @@ static const uint8_t init_cmds[] =
 };
 // clang-format on
 
+/* Make the buffer long enough for one full column plus a control byte. */
+/* Round up to 4 bytes to keep it 32-bit aligned FWIW. */
+#define OLED_COLUMN_LENGTH 64
+#define OLED_I2C_BUFFER_LENGTH  (OLED_COLUMN_LENGTH+4)
+static uint8_t i2c_buffer[OLED_I2C_BUFFER_LENGTH]; 
+
+
 /** 
  * Send Configuration string to OLED displaty 
  */
@@ -113,9 +124,10 @@ void OLED_SendData(uint8_t page_addr, uint8_t col_addr, const uint8_t *data, uin
 {
   HAL_StatusTypeDef ret;
 
-  if (length > 63) length = 63;
+  /* limit data to length of one column */
+  if (length > OLED_COLUMN_LENGTH) length = OLED_COLUMN_LENGTH;
 
-  printf("pg: %u, col: %u len:%u\r\n", page_addr, col_addr, length);
+  //printf("pg: %u, col: %u len:%u\r\n", page_addr, col_addr, length);
 
   i2c_buffer[0] = SH1107_I2C_COMMAND;
   i2c_buffer[1] = SH1107_SET_PAGE_ADDR + (page_addr & 0x0F);
@@ -130,6 +142,7 @@ void OLED_SendData(uint8_t page_addr, uint8_t col_addr, const uint8_t *data, uin
     Blink_Code(3);
   }
 
+  /* put DATA control byte in front of user data */
   i2c_buffer[0] = SH1107_I2C_DATA;
   for (uint8_t i= 0; i<length; i++)
   {
@@ -137,7 +150,7 @@ void OLED_SendData(uint8_t page_addr, uint8_t col_addr, const uint8_t *data, uin
   }
 
   /* send RAM image data  */
-  ret = HAL_I2C_Master_Transmit(&hi2c1, (uint16_t)  SH1107_I2C_ADDR, i2c_buffer, length +1, 1000);
+  ret = HAL_I2C_Master_Transmit(&hi2c1, (uint16_t)  SH1107_I2C_ADDR, i2c_buffer, length+1, 1000);
   if (ret != HAL_OK)
   {
     printf("Error sending RAM data.\r\n");
@@ -145,45 +158,18 @@ void OLED_SendData(uint8_t page_addr, uint8_t col_addr, const uint8_t *data, uin
   }
   return;
 }
-
 void OLED_PutChar(uint8_t x, uint8_t y, uint8_t glyph)
 {
-  HAL_StatusTypeDef ret;
+  // printf("(%u, %u) = %02X\r\n", x, y, glyph);
 
-  printf("(%u, %u) = %02X\r\n", x, y, glyph);
-
+  /* limit to screen size */
   uint8_t page_addr = 15 - (x & 0x0F);
   uint8_t col_addr = (8 * (y & 0x07));
 
-  i2c_buffer[0] = SH1107_I2C_COMMAND;
-  i2c_buffer[1] = SH1107_SET_PAGE_ADDR + page_addr;
-  i2c_buffer[2] = SH1107_SET_HI_COL_ADDR + (col_addr >> 4);
-  i2c_buffer[3] = SH1107_SET_LO_COL_ADDR + (col_addr & 0x0F);
-  
-  /* send set page and column address */
-  ret =  HAL_I2C_Master_Transmit(&hi2c1, (uint16_t) SH1107_I2C_ADDR, i2c_buffer, 4, 1000);
-  if (ret != HAL_OK)
-  {
-    printf("Error sending page/col address.\r\n");
-    Blink_Code(3);
-  }
-
+  /* index into font data */
   const uint8_t *data = &font[glyph * 8];
 
-  i2c_buffer[0] = SH1107_I2C_DATA;
-  for (uint8_t i = 0; i < 8; i++)
-  {
-    /* reverse order of 8 bytes in font */
-    i2c_buffer[i + 1] = data[i];  
-  }
-
-  /* send RAM data  */
-  ret = HAL_I2C_Master_Transmit(&hi2c1, (uint16_t)  SH1107_I2C_ADDR, i2c_buffer, 8+1, 1000);
-  if (ret != HAL_OK)
-  {
-    printf("Error sending RAM data.\r\n");
-    Blink_Code(4);
-  }
+  OLED_SendData(page_addr, col_addr, data, 8);
 
   return;
 }
