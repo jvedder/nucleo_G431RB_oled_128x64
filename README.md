@@ -1,11 +1,27 @@
 # nucleo_G431RB_oled_128x64
 
-Tinkering with a driver on the ST Microelectronics Nucleo-G431RB 
-developement board for the Adafruit #4650 128x64 OLED display.
+Tinkering with an 
+**Adafruit FeatherWing OLED - 128x64** 
+attached to an 
+STMicro **Nucleo-G431RB** evaluation board.
 
-**SCL** on the display is wired to **CN10 Pin 3** ( STM32G431 Port **PB8-Boot0**). 
+## Requirements
+ - "Nucleo-G431RB" Developement Board from [ST Microelectronics](https://www.st.com/stm32)
+ - "Adafruit FeatherWing OLED - 128x64" from Adafruit.com, [Product ID: 4650](https://www.adafruit.com/product/4650)
 
-**SDA** on the display is wired to **CN10 Pin 5** ( STM32G431 Port **PB9**).
+## Setup
+| Nucleo Pin     | Nucleo Signal | Adafruit #4650 Pin |
+| ---------------| ------------- | ------------------- |
+| **Power**      |               |                     |
+| CN7 Pin 16     | 3V3           | 3V                  |
+| CN7 Pin 20     | GND           | GND                 |
+| **I2C Port**   |               |                     |
+| CN10 Pin 10    | PB8-Boot0     | SCL                 |
+| CN10 Pin 5     | PB9           | SDA                 |
 
+### ST-LINK 
+ - ST-LINK serial port is set to 115,200 baud, 8 bits, no parity, 1 stop bit (115.2K, 8N1)
+   
 
-### MIT License
+## License
+MIT License. See LICENSE file.
