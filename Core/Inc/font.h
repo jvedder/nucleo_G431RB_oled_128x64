@@ -26,8 +26,8 @@ extern "C" {
 
 
 /* Declaraions */
-extern const uint8_t font[];
-
+extern const uint8_t font1[][8];
+extern const uint8_t font2[][16];
 
 /* Prototypes */
 

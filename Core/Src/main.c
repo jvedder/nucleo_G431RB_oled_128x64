@@ -106,7 +106,7 @@ int main(void)
   //OLED_SendData(0x02, 0x10);
   //OLED_SendData(0x03, 0x18);
   OLED_Fill();
-  //OLED_PutChar(0x00, 0x00, 'F');
+  //OLED_PutChar(0x00, 0x00, 'F');q
 
   /* USER CODE END 2 */
 

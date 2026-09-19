@@ -158,18 +158,96 @@ void OLED_SendData(uint8_t page_addr, uint8_t col_addr, const uint8_t *data, uin
   }
   return;
 }
+
 void OLED_PutChar(uint8_t x, uint8_t y, uint8_t glyph)
 {
   // printf("(%u, %u) = %02X\r\n", x, y, glyph);
+
+  // limit glyph to 0x20 to 0x7F
+  if (glyph < 0x20) glyph = 0x7F;
+  glyph &= 0x7F;
 
   /* limit to screen size */
   uint8_t page_addr = 15 - (x & 0x0F);
   uint8_t col_addr = (8 * (y & 0x07));
 
   /* index into font data */
-  const uint8_t *data = &font[glyph * 8];
+  const uint8_t *data = font1[glyph - 0x20];
 
   OLED_SendData(page_addr, col_addr, data, 8);
+
+  return;
+}
+
+void OLED_PutChar2x(uint8_t x, uint8_t y, uint8_t glyph)
+{
+  // printf("(%u, %u) = %02X\r\n", x, y, glyph);
+
+  // limit glyph to 0x20 to 0x7F
+  if (glyph < 0x20) glyph = 0x7F;
+  glyph &= 0x7F;
+
+  /* limit to screen size */
+  uint8_t page_addr = 15 - (x & 0x0F);
+  uint8_t col_addr = (8 * (y & 0x07));
+
+  uint8_t data[16];
+  uint8_t bits;
+
+  /* left half -- double bits wide and high */
+  for (uint8_t i = 0; i < 8; i++)
+  {
+    bits = font1[glyph - 0x20][i];
+    bits = double_bit[bits >> 4];
+    data[2*i] =      bits;
+    data[2*i + 1] =  bits;
+  }
+  OLED_SendData(page_addr, col_addr, data, 16);
+  
+  /* right half -- double bits wide and high */
+  for (uint8_t i = 0; i < 8; i++)
+  {
+    bits = font1[glyph - 0x20][i];
+    bits = double_bit[bits & 0x0F];
+    data[2*i] =      bits;
+    data[2*i + 1] =  bits;
+  }
+  OLED_SendData(page_addr-1, col_addr, data, 16);
+
+  return;
+}
+
+
+void OLED_PutCharIBM(uint8_t x, uint8_t y, uint8_t glyph)
+{
+  // printf("(%u, %u) = %02X\r\n", x, y, glyph);
+
+  // limit glyph to 0x20 to 0x7F
+  if (glyph < 0x20) glyph = 0x7F;
+  glyph &= 0x7F;
+
+  /* limit to screen size */
+  uint8_t page_addr = 15 - (x & 0x0F);
+  uint8_t col_addr = (8 * (y & 0x07));
+
+  uint8_t data[16];
+  uint8_t bits;
+
+  /* left half */
+  for (uint8_t i = 0; i < 16; i++)
+  {
+    bits = font2[glyph - 0x20][i];
+    data[i] = (bits >> 4);
+  }
+  OLED_SendData(page_addr, col_addr, data, 16);
+  
+  /* right half -- double bits wide and high */
+  for (uint8_t i = 0; i < 16; i++)
+  {
+    bits = font2[glyph - 0x20][i];
+    data[i] = (bits << 4);
+  }
+  OLED_SendData(page_addr-1, col_addr, data, 16);
 
   return;
 }
@@ -188,13 +266,54 @@ void OLED_Clear(void)
 
 void OLED_Fill(void)
 {
-  uint8_t glyph = '0';
+  uint8_t glyph;
 
-  for(uint8_t y = 0; y < 8; y++)
+  #if 0
+  glyph = '0';
+  for(uint8_t y = 0; y < 4; y++)
   {
     for (uint8_t x = 0; x < 16; x++)  
     {
       OLED_PutChar(x, y, glyph);
+      glyph++;
+      if (glyph > 0x7E) glyph = 0x21;
+    }
+  }
+  #endif
+
+  glyph = '0';
+  for(uint8_t y = 0; y < 4; y+=2)
+  {
+    for (uint8_t x = 0; x < 16; x+=2)  
+    {
+      OLED_PutChar2x(x, y, glyph);
+      glyph++;
+      if (glyph > 0x7E) glyph = 0x21;
+    }
+  }
+
+  glyph = '0';
+  for(uint8_t y = 4; y < 8; y+=2)
+  {
+    for (uint8_t x = 0; x < 16; x+=2)  
+    {
+      OLED_PutCharIBM(x, y, glyph);
+      glyph++;
+      if (glyph > 0x7E) glyph = 0x21;
+    }
+  }
+  return;
+}
+
+void OLED_Fill2x(void)
+{
+  uint8_t glyph = '0';
+
+  for(uint8_t y = 0; y < 8; y+=2)
+  {
+    for (uint8_t x = 0; x < 16; x+=2)  
+    {
+      OLED_PutChar2x(x, y, glyph);
       glyph++;
       if (glyph > 0x7E) glyph = 0x21;
     }
