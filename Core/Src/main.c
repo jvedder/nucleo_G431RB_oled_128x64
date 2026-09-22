@@ -12,14 +12,16 @@
   * This software is licensed under terms that can be found in the LICENSE file
   * in the root directory of this software component.
   * If no LICENSE file comes with this software, it is provided AS-IS.
-  * 
+  *
   ******************************************************************************
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "i2c.h"
+#include "stm32g4xx_hal_rtc.h"
 #include "usart.h"
+#include "rtc.h"
 #include "gpio.h"
 #include "font.h"
 
@@ -94,6 +96,7 @@ int main(void)
   MX_GPIO_Init();
   MX_LPUART1_UART_Init();
   MX_I2C1_Init();
+  MX_RTC_Init();
   /* USER CODE BEGIN 2 */
 
   printf("\r\n\r\n** Booted **\r\n");
@@ -101,12 +104,8 @@ int main(void)
 
   OLED_Init();
   OLED_Clear();
-  //OLED_SendData(0x00, 0x00);
-  //OLED_SendData(0x01, 0x00);
-  //OLED_SendData(0x02, 0x10);
-  //OLED_SendData(0x03, 0x18);
-  OLED_Fill();
-  //OLED_PutChar(0x00, 0x00, 'F');q
+  //OLED_Fill();
+  OLED_Fill3();
 
   /* USER CODE END 2 */
 
@@ -139,9 +138,10 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_LSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV4;

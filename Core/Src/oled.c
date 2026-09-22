@@ -15,6 +15,7 @@
 #include "i2c.h"
 #include "main.h"
 #include "stm32g4xx_hal.h"
+#include "stm32g4xx_hal_gpio.h"
 #include "oled.h"
 
 #include <stdint.h>
@@ -322,18 +323,27 @@ void OLED_Fill(void)
   return;
 }
 
-void OLED_Fill2x(void)
+void OLED_Fill3(void)
 {
   uint8_t glyph = '0';
 
-  for(uint8_t y = 0; y < 8; y+=2)
+  while(1)
   {
-    for (uint8_t x = 0; x < 16; x+=2)  
+    for(uint8_t y = 0; y < 8; y+=2)
     {
-      OLED_PutChar1Double(x, y, glyph);
-      glyph++;
-      if (glyph > 0x7E) glyph = 0x21;
+      for (uint8_t x = 0; x < 16; x+=2)  
+      {
+        OLED_PutChar3(x, y, glyph);
+        glyph++;
+        if (glyph > 0x7E) glyph = 0x21;
+      }
     }
+
+    /* wait for USER button press, debounce delay, wait for release */
+    while(HAL_GPIO_ReadPin(BTN_USER_GPIO_Port, BTN_USER_Pin) == GPIO_PIN_RESET);
+    HAL_Delay(100);
+    while(HAL_GPIO_ReadPin(BTN_USER_GPIO_Port, BTN_USER_Pin) == GPIO_PIN_SET);
+
   }
   return;
 }

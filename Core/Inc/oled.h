@@ -30,7 +30,7 @@ void OLED_PutChar1(uint8_t x, uint8_t y, uint8_t glyph);
 void OLED_PutChar1Double(uint8_t x, uint8_t y, uint8_t glyph);
 void OLED_Clear(void);
 void OLED_Fill(void);
-void OLED_Fill2x(void);
+void OLED_Fill3(void);
 
 #ifdef __cplusplus
 }
