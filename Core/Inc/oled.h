@@ -26,8 +26,8 @@ extern "C" {
 
 void OLED_Init(void);
 void OLED_SendData(  uint8_t page_addr, uint8_t col_addr, const uint8_t *data, uint8_t length);
-void OLED_PutChar(uint8_t x, uint8_t y, uint8_t glyph);
-void OLED_PutChar2x(uint8_t x, uint8_t y, uint8_t glyph);
+void OLED_PutChar1(uint8_t x, uint8_t y, uint8_t glyph);
+void OLED_PutChar1Double(uint8_t x, uint8_t y, uint8_t glyph);
 void OLED_Clear(void);
 void OLED_Fill(void);
 void OLED_Fill2x(void);
