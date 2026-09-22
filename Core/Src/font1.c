@@ -1,8 +1,16 @@
 /**
   ******************************************************************************
   * @file    font.h
-  * @brief   This file contains all the function prototypes for
-  *          the font.c file
+  * @brief   This file contains the bit patterns for a 5x7 bit fixed-pitcch 
+  *          font.
+  *          - Array of 8-bytes arrays.
+  *          - Each byte represents a horizontal row with all glyphs in the lower 
+  *            5 bits. 
+  *          - MSB on the left; LSB on the right; first word on the top.
+  *          - The last (8th) byte of all gylphs are zero except those with a 
+  *            descender (lower case g, p, q and y).
+  *          - Includes ASCII characters 0x20 (space) through 0x7E (~) plus
+  *            character 0x7F (rubout) is a solid 10x14 block. 
   ******************************************************************************
   * @attention
   * Copyright (c) 2026 John Vedder

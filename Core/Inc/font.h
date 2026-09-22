@@ -26,8 +26,15 @@ extern "C" {
 
 
 /* Declaraions */
+
+/* Adafruit-GFX 5x7 font */
 extern const uint8_t font1[][8];
+
+/* IBM PC VGA 8x16 font */
 extern const uint8_t font2[][16];
+
+/* My 10x16 font */
+extern const uint16_t font3[][16];
 
 /* Prototypes */
 
