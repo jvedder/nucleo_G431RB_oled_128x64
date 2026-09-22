@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
-  * @file    font.h
-  * @brief   This file contains the bit patterns for a 5x7 bit fixed-pitcch 
+  * @file    font1.c
+  * @brief   This file contains the bit patterns for a 5x7 bit fixed-pitch 
   *          font.
   *          - Array of 8-bytes arrays.
   *          - Each byte represents a horizontal row with all glyphs in the lower 

@@ -1,9 +1,9 @@
 /**
   ******************************************************************************
-  * @file    font.h
-  * @brief   This file contains the bit patterns for a 10x16 bit fixed-pitcch 
+  * @file    font3.c
+  * @brief   This file contains the bit patterns for a 10x16 bit fixed-pitch 
   *          font.
-  *          - Array of 16 word arrays.
+  *          - Array of 16-word arrays.
   *          - Each word represents a horizontal row with all glyphs in the lower 
   *           14 bits. 
   *          - MSB on the left; LSB on the right; first word on the top.
