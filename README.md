@@ -2,12 +2,14 @@
 
 Tinkering with an 
 **Adafruit FeatherWing OLED - 128x64** 
-attached to an 
+display attached to an 
 STMicro **Nucleo-G431RB** evaluation board.
 
 ## Requirements
- - "Nucleo-G431RB" Developement Board from [ST Microelectronics](https://www.st.com/stm32)
- - "Adafruit FeatherWing OLED - 128x64" from Adafruit.com, [Product ID: 4650](https://www.adafruit.com/product/4650)
+ - "Nucleo-G431RB" Developement Board from ST Microelectronics
+   ([https://www.st.com/stm32](https://www.st.com/stm32)).
+ - "Adafruit FeatherWing OLED - 128x64" from Adafruit.com, Product ID 4650 
+   ([https://www.adafruit.com/product/4650](https://www.adafruit.com/product/4650)).
 
 ## Setup
 | Nucleo Pin     | Nucleo Signal | Adafruit #4650 Pin |
@@ -24,4 +26,4 @@ STMicro **Nucleo-G431RB** evaluation board.
    
 
 ## License
-MIT License. See LICENSE file.
+MIT License; see LICENSE file.
